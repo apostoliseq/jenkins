@@ -1,0 +1,16 @@
+services:
+  jenkins:
+    image: ms-nosql_jenkins:1.0
+    container_name: ms-nosql_jenkins
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    ports:
+      - "9000:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
