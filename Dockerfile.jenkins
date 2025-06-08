@@ -1,13 +1,14 @@
 FROM jenkins/jenkins:2.513-jdk21
 
-# Skip initial setup wizard
-# ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+ARG DOCKER_GID
 
-# Run as root to install additional packages if needed later
-# USER root
+USER root
 
-# Switch back to jenkins user
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+
+RUN groupadd -g ${DOCKER_GID} docker && usermod -aG docker jenkins
+
 USER jenkins
 
-# Expose default Jenkins port & agent port
 EXPOSE 8080 50000
